@@ -1,0 +1,106 @@
+http://suninjuly.github.io/math.html. 
+
+
+
+<input class="form-check-input" type="radio" name="ruler" id="peopleRule" value="people" checked>
+
+people_radio = browser.find_element_by_id("peopleRule")
+
+print(people_radio.get_attribute("name"))
+# Напечатает ruler, т.е. текстовое значение аттрибута
+
+print(people_radio.get_attribute("checked"))
+# Напечатает true, т.е. факт того что аттрибут существует. Учтите что true это в данном случае строка, а не булево значение.
+
+print(people_radio.get_attribute("href"))
+# Напечатает None, т.к. аттрибут не существует. И это не строка а None-значение.
+
+-----------------------------------------------------------------------------
+
+from selenium import webdriver
+import time
+
+link = "http://suninjuly.github.io/math.html"
+
+try:
+    browser = webdriver.Chrome()
+    browser.get(link)
+
+#проверяем значение атрибута checked у people_radio
+    people_radio = browser.find_element_by_id("peopleRule")
+    people_checked = people_radio.get_attribute("checked")
+    print("value of people radio: ", people_checked)
+    assert people_checked is not None, "People radio is not selected by default"
+
+#проверяем значение атрибута checked у robots_radio
+    robots_radio = browser.find_element_by_id("robotsRule")
+    robots_checked = robots_radio.get_attribute("checked")
+    print("value of robots_radio: ", robots_checked)
+    assert robots_checked is None
+
+#проверяем значение атрибута disabled у кнопки Submit
+    button = browser.find_element_by_css_selector('.btn')
+    button_disabled = button.get_attribute("disabled")
+    print("value of button Submit: ", button_disabled)
+    assert button_disabled is None
+
+#проверяем значение атрибута disabled у кнопки Submit после таймаута
+    time.sleep(10)
+    button_disabled = button.get_attribute("disabled")
+    print("value of button Submit after 10sec: ", button_disabled)
+    assert button_disabled is not None
+
+finally:
+    # закрываем браузер после всех манипуляций
+    browser.quit()
+
+# не забываем оставить пустую строку в конце файла
+-----------------------------------------------------------------------
+ Если у атрибута есть значение, например у атрибута class есть значение, то метод get_attribute его выведет
+ Если атрибут не имеет значения, например checked, в таком случае возвращается простой ответ Да или Нет, только в виде true или None
+
+# Находим сам элемент
+people_radio = browser.find_element(By.ID, "peopleRule")
+
+print(people_radio.get_attribute("name"))
+# Напечатает ruler, т.е. текстовое значение аттрибута
+
+print(f'ищем атрибут класс ' + people_radio.get_attribute("class"))
+# Напечатает значение класса который есть у элемента
+
+print(f'ищем атрибут класс ' + people_radio.get_attribute("id"))
+# Напечатает значение id который есть у элемента
+
+print(f'ищем атрибут type ' + people_radio.get_attribute("type"))
+# Напечатает тип атрибута radio
+
+print(f'ищем значение атрибута name ' + people_radio.get_attribute("ruler"))
+# Так найти не получается
+
+print(people_radio.get_attribute("checked"))
+# Напечатает true, т.е. факт того что аттрибут существует. Учтите что true это в данном случае строка, а не булево значение.
+
+print(people_radio.get_attribute("href"))
+# Напечатает None, т.к. аттрибут не существует. И это не строка, а None-значение.
+-----------------------------------------------------------------------
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+
+try:
+    browser = webdriver.Chrome()
+    browser.get('http://suninjuly.github.io/math.html')
+    
+    checkbox_robot = browser.find_element(By.ID, 'robotCheckbox')
+    default_attribute_checkbox_robot = checkbox_robot.get_attribute('checked')
+    assert default_attribute_checkbox_robot == None, ' чекбокс не должен быть нажат по дефолту'
+    
+    radio_people = browser.find_element(By.ID, 'peopleRule')
+    default_attrubure_radio_people = radio_people.get_attribute('checked')
+    assert default_attrubure_radio_people, ' чекбокс должен быть нажат по дефолту'
+    
+    radio_robots = browser.find_element(By.ID, 'robotsRule')
+    default_attribute_radio_robots = radio_robots.get_attribute('checked')
+    assert default_attribute_radio_robots == None, ' чекбокс не должен быть нажат по дефолту'
+
+finally:
+    browser.quit()
